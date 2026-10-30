@@ -1,0 +1,36 @@
+[project]
+name = "pretix-email-autofill"
+dynamic = ["version"]
+description = "Autocompleta las preguntas del checkout con los datos de compras anteriores, verificando el correo con un código. Sin cuentas."
+readme = "README.rst"
+license = {text = "Apache-2.0"}
+keywords = ["pretix"]
+authors = [
+    {name = "Jesus Tandayamo", email = "jesustandayamo@kuribit.com"},
+]
+maintainers = [
+    {name = "Jesus Tandayamo", email = "jesustandayamo@kuribit.com"},
+]
+requires-python = ">=3.9"
+dependencies = []
+
+[project.urls]
+homepage = "https://github.com/BJTS2005/pretix-email-autofill"
+repository = "https://github.com/BJTS2005/pretix-email-autofill"
+
+[project.entry-points."pretix.plugin"]
+pretix_email_autofill = "pretix_email_autofill:PretixPluginMeta"
+
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.dynamic]
+version = {attr = "pretix_email_autofill.__version__"}
+
+[tool.setuptools.packages.find]
+include = ["pretix_email_autofill*"]
+namespaces = false

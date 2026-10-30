@@ -1,0 +1,3 @@
+recursive-include pretix_email_autofill/templates *
+recursive-include pretix_email_autofill/static *
+recursive-include pretix_email_autofill/locale *

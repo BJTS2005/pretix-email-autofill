@@ -1,0 +1,107 @@
+{% extends "pretixpresale/event/checkout_base.html" %}
+{% load i18n %}
+{% load bootstrap3 %}
+{% block inner %}
+    {% if stage == "done" %}
+        <div class="alert alert-success">
+            {% blocktrans trimmed with email=pending_email %}
+                Verificamos <strong>{{ email }}</strong> y rellenamos tus datos en el siguiente paso.
+            {% endblocktrans %}
+        </div>
+        <p>
+            {% trans "Si agregaste entradas después de verificar, puedes volver a rellenarlas. Nunca reemplazamos lo que ya escribiste." %}
+        </p>
+        <form method="post" class="text-right">
+            {% csrf_token %}
+            <button class="btn btn-link" type="submit" name="action" value="change">{% trans "Usar otro correo" %}</button>
+        </form>
+        <form method="post" class="checkout-button-row row">
+            {% csrf_token %}
+            <div class="col-md-4 col-sm-6">
+                <button class="btn btn-block btn-default btn-lg" type="submit" name="action" value="reapply">
+                    {% trans "Volver a rellenar" %}
+                </button>
+            </div>
+            <div class="col-md-4 col-md-offset-4 col-sm-6">
+                <button class="btn btn-block btn-primary btn-lg" type="submit" name="action" value="skip">
+                    {% trans "Continuar" %}
+                </button>
+            </div>
+            <div class="clearfix"></div>
+        </form>
+
+    {% elif stage == "code" %}
+        <p>
+            {% blocktrans trimmed with email=pending_email minutes=minutes %}
+                Si ya compraste antes con <strong>{{ email }}</strong>, te enviamos un código de 6 dígitos
+                (vence en {{ minutes }} minutos). Revisa también la carpeta de spam.
+            {% endblocktrans %}
+        </p>
+        <p class="text-muted">
+            {% trans "Si es tu primera compra, no te llegará ningún código: continúa sin autocompletar." %}
+        </p>
+        <form method="post" class="form-horizontal">
+            {% csrf_token %}
+            {% bootstrap_field code_form.code layout="checkout" %}
+            <div class="row">
+                <div class="col-md-4 col-md-offset-8 col-sm-6 col-sm-offset-6">
+                    <button class="btn btn-block btn-primary" type="submit" name="action" value="verify">
+                        {% trans "Rellenar mis datos" %}
+                    </button>
+                </div>
+            </div>
+        </form>
+        <form method="post" class="text-right">
+            {% csrf_token %}
+            <input type="hidden" name="email" value="{{ pending_email }}">
+            <button class="btn btn-link" type="submit" name="action" value="send">{% trans "Reenviar código" %}</button>
+            <button class="btn btn-link" type="submit" name="action" value="change">{% trans "Usar otro correo" %}</button>
+        </form>
+        <form method="post" class="checkout-button-row row">
+            {% csrf_token %}
+            <div class="col-md-4 col-sm-6">
+                <a class="btn btn-block btn-default btn-lg" href="{{ prev_url }}">{% trans "Go back" %}</a>
+            </div>
+            <div class="col-md-4 col-md-offset-4 col-sm-6">
+                <button class="btn btn-block btn-default btn-lg" type="submit" name="action" value="skip">
+                    {% trans "Continuar sin autocompletar" %}
+                </button>
+            </div>
+            <div class="clearfix"></div>
+        </form>
+
+    {% else %}
+        <p>
+            {% trans "¿Ya compraste antes con nosotros? Te enviamos un código a tu correo y rellenamos tus datos por ti. No necesitas cuenta ni contraseña." %}
+        </p>
+        {% if fields or attendee_data %}
+            <p class="text-muted">
+                {% trans "Se rellenan:" %}
+                {% for f in fields %}{{ f }}{% if not forloop.last %}, {% endif %}{% endfor %}{% if attendee_data %}{% if fields %}, {% endif %}{% trans "datos del asistente" %}{% endif %}.
+            </p>
+        {% endif %}
+        <form method="post" class="form-horizontal">
+            {% csrf_token %}
+            {% bootstrap_field email_form.email layout="checkout" %}
+            <div class="row">
+                <div class="col-md-4 col-md-offset-8 col-sm-6 col-sm-offset-6">
+                    <button class="btn btn-block btn-primary" type="submit" name="action" value="send">
+                        {% trans "Enviarme un código" %}
+                    </button>
+                </div>
+            </div>
+        </form>
+        <form method="post" class="checkout-button-row row">
+            {% csrf_token %}
+            <div class="col-md-4 col-sm-6">
+                <a class="btn btn-block btn-default btn-lg" href="{{ prev_url }}">{% trans "Go back" %}</a>
+            </div>
+            <div class="col-md-4 col-md-offset-4 col-sm-6">
+                <button class="btn btn-block btn-default btn-lg" type="submit" name="action" value="skip">
+                    {% trans "Continuar sin autocompletar" %}
+                </button>
+            </div>
+            <div class="clearfix"></div>
+        </form>
+    {% endif %}
+{% endblock %}

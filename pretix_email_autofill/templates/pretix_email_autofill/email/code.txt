@@ -1,0 +1,9 @@
+{% load i18n %}{% blocktrans trimmed %}Hola,{% endblocktrans %}
+
+{% blocktrans trimmed %}Tu código para rellenar automáticamente tus datos en {{ event_name }} es:{% endblocktrans %}
+
+{{ code }}
+
+{% blocktrans trimmed %}Vence en {{ minutes }} minutos.{% endblocktrans %}
+
+{% blocktrans trimmed %}Si no lo pediste tú, ignora este mensaje: sin este código nadie puede ver tus datos.{% endblocktrans %}

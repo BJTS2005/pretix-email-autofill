@@ -1,0 +1,35 @@
+{% extends "pretixcontrol/event/settings_base.html" %}
+{% load i18n %}
+{% load bootstrap3 %}
+{% block title %}{% trans "Autocompletado por correo" %}{% endblock %}
+{% block inside %}
+    <h1>{% trans "Autocompletado por correo" %}</h1>
+    <p>
+        {% blocktrans trimmed %}
+            Antes del paso de preguntas, el comprador puede pedir un código a su correo. Si ese correo
+            ya compró en cualquier evento de este organizador, al ingresar el código se rellenan sus
+            respuestas anteriores. Así nadie puede ver los datos de otra persona solo con saber su correo.
+        {% endblocktrans %}
+    </p>
+    <form action="" method="post" class="form-horizontal">
+        {% csrf_token %}
+        {% bootstrap_form_errors form %}
+        <fieldset>
+            <legend>{% trans "Ajustes" %}</legend>
+            {% bootstrap_field form.email_autofill_enabled layout="control" %}
+            {% if form.has_questions %}
+                {% bootstrap_field form.email_autofill_questions layout="control" %}
+            {% else %}
+                <div class="alert alert-info">
+                    {% trans "Este evento todavía no tiene preguntas que se puedan rellenar." %}
+                </div>
+            {% endif %}
+            {% bootstrap_field form.email_autofill_attendee_data layout="control" %}
+        </fieldset>
+        <div class="form-group submit-group">
+            <button type="submit" class="btn btn-primary btn-save">
+                {% trans "Save" %}
+            </button>
+        </div>
+    </form>
+{% endblock %}
